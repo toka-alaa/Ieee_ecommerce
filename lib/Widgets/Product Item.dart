@@ -26,7 +26,7 @@ class ProductItem extends StatelessWidget {
                 imageUrl:image,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                height: 126,
+                height: 132,
                 errorWidget: (context, url, error) => Icon(Icons.error),
                 placeholder: (context, url) => Center(child:
                 CircularProgressIndicator(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ieee_ecommerce/Screens/Login%20Screen/Login.dart';
 import 'package:provider/provider.dart';
-
 import '../../Providers/Theme Provider.dart';
 
 class Setting extends StatelessWidget {
@@ -37,7 +36,44 @@ class Setting extends StatelessWidget {
               width: 200,
               height: 40,
               child: MaterialButton(onPressed: (){
-                Get.to(Login());
+                showDialog(context: context, builder: (context){
+                  return AlertDialog(
+                    actions: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 20,),
+                          Text("Are you sure ? ",style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 20
+                          ),),
+                          SizedBox(height: 20,),
+                          Row(
+                            mainAxisAlignment : MainAxisAlignment.spaceEvenly,
+                            children: [
+                              TextButton(onPressed: (){
+                                Get.to(Login());
+                              },
+                                  child: Text("Yes",style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black,
+                                      fontSize: 20
+                                  ),)),
+                              TextButton(onPressed: (){
+                                Navigator.of(context).pop();
+                              },
+                                  child: Text("No",style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black,
+                                      fontSize: 20
+                                  ),)),
+                            ],
+                          )
+                        ],
+                      )
+                    ],
+                  );
+                });
               },
                 color:Colors.red,
                 

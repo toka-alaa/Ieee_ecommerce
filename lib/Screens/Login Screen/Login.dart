@@ -86,7 +86,7 @@ class Login extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Get.off(MainLayout());
+                  Get.offAll(MainLayout());
                 },
                 style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.black,
