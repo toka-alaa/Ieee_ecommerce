@@ -46,26 +46,26 @@ class _SearchPageState extends State<SearchPage> {
                 });
               },
             ),
-            FutureBuilder<ProductResponse>(
-              future: APIManager().searchProducts(search),
-              builder: (context, AsyncSnapshot<ProductResponse> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text(" "),//snapshot.error.toString()
-                  );
-                }
-                final ProductResponse? Product = snapshot.data;
-                final ProductResponse item = Product!;
-                return ProductItem(
-                    image: item.images![0],
-                    name: item.title!,
-                    price: item.price.toString());
-              },
-            )
+            // FutureBuilder<ProductResponse>(
+            //   future: APIManager().searchProducts(search),
+            //   builder: (context, AsyncSnapshot<ProductResponse> snapshot) {
+            //     if (snapshot.connectionState == ConnectionState.waiting) {
+            //       return Center(
+            //         child: CircularProgressIndicator(),
+            //       );
+            //     } else if (snapshot.hasError) {
+            //       return Center(
+            //         child: Text(" "),//snapshot.error.toString()
+            //       );
+            //     }
+            //     final ProductResponse? Product = snapshot.data;
+            //     final ProductResponse item = Product!;
+            //     return ProductItem(
+            //         image: item.images![0],
+            //         name: item.title!,
+            //         price: item.price.toString());
+            //   },
+            // )
           ],
         ),
       ),
