@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../Models/product lists.dart';
 import '../../Widgets/Product Item.dart';
+import '../../data/api manager/api_manager.dart';
+import '../../data/model/product_response.dart';
 
 class Home extends StatelessWidget {
   Home({super.key});
 
-  List<String> categories = [
+  List<dynamic> categories = [
     "All",
     "Fashion",
     "Home & Kitchen",
@@ -49,14 +51,36 @@ class Home extends StatelessWidget {
         ),
         body: TabBarView(
           children:[
-            Center(child : GridView.builder(
+            Center(child : FutureBuilder<List<ProductResponse>>(future:APIManager().getAllProduct()  , builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                {
+                  return Center(child: CircularProgressIndicator());
+                }
+              else if (snapshot.hasError)
+              {
+                return Center(child :Text(snapshot.error.toString()));
+              }
+              else if (!snapshot.hasData || snapshot.data!.isEmpty)
+                {
+                  return Center(child :Text("Not Found"));
+                }
+              return GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                itemCount: all.length,
+                itemCount: snapshot.data?.length,
                 itemBuilder: (context, index) => ProductItem(
-                    image: all[index].image,
-                    name: all[index].name,
-                    price: all[index].price),
-              ),
+                    image: snapshot.data![index].images?[0] ?? '',
+                    name: snapshot.data![index].title ?? '',
+                    price: snapshot.data![index].price.toString()),
+              );
+            },) ,
+          // GridView.builder(
+            //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            //     itemCount: all.length,
+            //     itemBuilder: (context, index) => ProductItem(
+            //         image: all[index].image,
+            //         name: all[index].name,
+            //         price: all[index].price),
+            //   ),
             ),
             Center(child : GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),

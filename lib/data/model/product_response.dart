@@ -14,6 +14,8 @@ class ProductResponse {
     slag = Json["slag"];
     price = Json["price"];
     discripetion = Json["discripetion"];
-    images = Json["images"];
+    images = Json["images"] != null
+        ? (Json["images"] as List).map((e) => e.toString()).toList()
+        : null;
   }
 }

@@ -1,45 +1,72 @@
 import 'package:flutter/material.dart';
 
-class Search extends StatelessWidget {
-  const Search({super.key});
+import '../../Widgets/Product Item.dart';
+import '../../data/api manager/api_manager.dart';
+import '../../data/model/Product_response.dart';
 
+class SearchPage extends StatefulWidget {
+  const SearchPage({super.key});
+
+  @override
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+String? search;
+
+class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Align(
-          alignment:Alignment.topCenter,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 30,
-              ),
-              SizedBox(
-                width: 330,
-                child: TextFormField(
-                  style: TextStyle(color: Colors.black),
-                  decoration: InputDecoration(
-
-                    filled: true,
-                    hintStyle: TextStyle(color: Colors.black),
-                    hintText: 'Search Product ...',
-                    fillColor: Colors.grey[300],
-                    prefixIcon: Icon(Icons.search, color: Colors.black),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                  cursorColor: Colors.black,
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 50,
+            ),
+            TextField(
+              decoration: InputDecoration(
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey,
                 ),
+                focusedBorder:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                label: Text(
+                  'Search Products...',
+                  style: TextStyle(color: Colors.grey),
+                ),
+                enabledBorder:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
               ),
-
-            ],
-          ),
+              onSubmitted: (value) {
+                setState(() {
+                  search = value;
+                  print(search);
+                });
+              },
+            ),
+            FutureBuilder<ProductResponse>(
+              future: APIManager().searchProducts(search),
+              builder: (context, AsyncSnapshot<ProductResponse> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text(" "),//snapshot.error.toString()
+                  );
+                }
+                final ProductResponse? Product = snapshot.data;
+                final ProductResponse item = Product!;
+                return ProductItem(
+                    image: item.images![0],
+                    name: item.title!,
+                    price: item.price.toString());
+              },
+            )
+          ],
         ),
       ),
     );

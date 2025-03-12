@@ -18,7 +18,7 @@ class ProductItem extends StatelessWidget {
           border: Border.all(width: 1)
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             ClipRRect(
               borderRadius : BorderRadius.vertical(top: Radius.circular(15)),
@@ -26,7 +26,7 @@ class ProductItem extends StatelessWidget {
                 imageUrl:image,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                height: 132,
+                height: 120,
                 errorWidget: (context, url, error) => Icon(Icons.error),
                 placeholder: (context, url) => Center(child:
                 CircularProgressIndicator(
