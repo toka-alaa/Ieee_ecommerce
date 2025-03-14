@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../Widgets/Product Item.dart';
 import '../../data/api manager/api_manager.dart';
-import '../../data/model/Product_response.dart';
+import '../../data/model/product_response.dart';
 
 class Search extends StatefulWidget {
   const Search({super.key});
@@ -27,7 +26,7 @@ class _SearchState extends State<Search> {
               decoration: InputDecoration(
                 prefixIcon: Icon(
                   Icons.search,
-                  color: Colors.grey,
+                  color: Colors.black,
                 ),
                 focusedBorder:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
@@ -41,13 +40,11 @@ class _SearchState extends State<Search> {
               onSubmitted: (value) {
                 setState(() {
                   search = value;
-                  print(search);
                 });
               },
             ),
             FutureBuilder<ProductResponse?>(
-              future: APIManager().searchProducts(search)
-                  as Future<ProductResponse?>,
+              future: APIManager().searchProducts(search),
               builder: (context, AsyncSnapshot<ProductResponse?> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
@@ -55,18 +52,70 @@ class _SearchState extends State<Search> {
                   );
                 } else if (snapshot.hasError) {
                   return Center(
-                    child: Text(" "), //snapshot.error.toString()
+                    child: Text("Error: ${snapshot.error}"),
+                  );
+                } else if (!snapshot.hasData || snapshot.data == null) {
+                  return Center(
+                    child: Text("No product found"),
                   );
                 }
-                final ProductResponse? product = snapshot.data;
-                final ProductResponse item = product!;
-                return ProductItem(
-                  image: item.images![0],
-                  name: item.title!,
-                  price: item.price.toString(),
-                );
+
+                final ProductResponse item = snapshot.data!;
+
+                return Card(
+                    elevation: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Image.network(
+                              (item.images?.isNotEmpty == true)
+                                  ? item.images![0]
+                                  : "https://via.placeholder.com/150",
+                              height: 250,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(Icons.image_not_supported, size: 100),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            item.title ?? "No title",
+                            style: TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "\$${item.price?.toString() ?? "0.0"}",
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
+                            child: Text("Buy Now",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white)),
+                          ),
+                        ],
+                      ),
+                    ));
               },
-            )
+            ),
           ],
         ),
       ),
